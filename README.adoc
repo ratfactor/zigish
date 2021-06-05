@@ -1,0 +1,25 @@
+= Zigish - Zig Interactive Shell
+
+== I am a real shell!...ish
+
+This is a minimalist toy Unix shell written in Zig.
+
+----
+*** Hello, I am a real shell! ***
+> ls
+README.adoc  build.zig  src  zig-cache
+> date
+Sat Jun  5 13:26:59 EDT 2021
+> foo
+ERROR: error.FileNotFound
+>
+----
+
+It has almost no error checking and is otherwise unsuitable for "real work" and it never will.
+
+I started with this tutorial: https://brennan.io/2015/01/16/write-a-shell-in-c/[Write a Shell in C].
+
+The comments explain it pretty well.
+But check out my article, http://ratfactor.com/zig/forking-is-cool[Forking is Cool] for the whole story.
+
+Enjoy! :-)
