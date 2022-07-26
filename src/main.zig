@@ -36,7 +36,7 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
 
         // Split by a single space. The returned SplitIterator must be var because
         // it has mutable internal state.
-        var tokens = std.mem.split(input_str, " ");
+        var tokens = std.mem.split(u8, input_str, " ");
 
         // Copy each string "token" into the storage array and save a pointer to it.
         var i: usize = 0;
@@ -66,7 +66,6 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
             // If we make it this far, the exec() call has failed!
             try stdout.print("ERROR: {}\n", .{result});
             return;
-
         } else { // We are the parent.
 
             // waitpid() waits for the child with specified PID and returns
