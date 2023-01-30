@@ -36,7 +36,7 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
         var i: usize = 0;
         var n: usize = 0;
         var ofs: usize = 0;
-        while (i < input_str.len + 1) : (i += 1) {
+        while (i <= input_str.len) : (i += 1) {
             if (input_buffer[i] == 0x20 or input_buffer[i] == 0xa) {
                 input_buffer[i] = 0; // turn space or line feed into null byte as sentinel
                 args_ptrs[n] = @ptrCast(*align(1) const [*:0]u8, &input_buffer[ofs..i :0]).*;
