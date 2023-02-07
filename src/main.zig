@@ -13,7 +13,6 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
     while (true) {
         const max_input = 1024;
         const max_args = 10;
-        const max_arg_size = 255;
 
         // Prompt
         try stdout.print("> ", .{});
@@ -31,22 +30,21 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
 
         // The command and arguments are null-terminated strings. These arrays are
         // storage for the strings and pointers to those strings.
-        var args: [max_args][max_arg_size:0]u8 = undefined;
         var args_ptrs: [max_args:null]?[*:0]u8 = undefined;
 
-        // Split by a single space. The returned SplitIterator must be var because
-        // it has mutable internal state.
-        var tokens = std.mem.split(u8, input_str, " ");
-
-        // Copy each string "token" into the storage array and save a pointer to it.
+        // Split by a single space. Turn spaces and the final LF into null bytes
         var i: usize = 0;
-        while (tokens.next()) |tok| {
-            std.mem.copy(u8, &args[i], tok);
-            args[i][tok.len] = 0; // add sentinel 0
-            args_ptrs[i] = &args[i];
-            i += 1;
+        var n: usize = 0;
+        var ofs: usize = 0;
+        while (i <= input_str.len) : (i += 1) {
+            if (input_buffer[i] == 0x20 or input_buffer[i] == 0xa) {
+                input_buffer[i] = 0; // turn space or line feed into null byte as sentinel
+                args_ptrs[n] = @ptrCast(*align(1) const [*:0]u8, &input_buffer[ofs..i :0]).*;
+                n += 1;
+                ofs = i + 1;
+            }
         }
-        args_ptrs[i] = null; // add sentinel null
+        args_ptrs[n] = null; // add sentinel null
 
         // After calling fork(), TWO processes will continue running this
         // code! One is the parent, and the other is the new child.
