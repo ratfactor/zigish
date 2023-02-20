@@ -52,6 +52,11 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
         // value returned by fork();
         const fork_pid = try std.os.fork();
 
+        // In the case of an error the PID is <1.
+        if (fork_pid < 0) {
+            try stdout.print("ERROR in fork: {}\n", .{fork_pid});
+        } else
+
         // Who am I?
         if (fork_pid == 0) { // We are the child.
 
@@ -62,7 +67,7 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
             const result = std.os.execvpeZ(args_ptrs[0].?, &args_ptrs, &env);
 
             // If we make it this far, the exec() call has failed!
-            try stdout.print("ERROR: {}\n", .{result});
+            try stdout.print("ERROR in exec: {}\n", .{result});
             return;
         } else { // We are the parent.
 
