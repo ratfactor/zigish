@@ -10,12 +10,12 @@ pub fn main() !u8 {
 }
 
 fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
-    while (true) {
-        const max_input = 1024;
-        const max_args = 10;
+    const max_input = 1024;
+    const max_args = 10;
+    const prompt = "> ";
 
-        // Prompt
-        try stdout.print("> ", .{});
+    while (true) {
+        try stdout.print(prompt, .{});
 
         // Read STDIN into buffer
         var input_buffer: [max_input]u8 = undefined;
@@ -39,7 +39,7 @@ fn shellLoop(stdin: std.fs.File.Reader, stdout: std.fs.File.Writer) !void {
         while (i <= input_str.len) : (i += 1) {
             if (input_buffer[i] == 0x20 or input_buffer[i] == 0xa) {
                 input_buffer[i] = 0; // turn space or line feed into null byte as sentinel
-                args_ptrs[n] = @ptrCast(*align(1) const [*:0]u8, &input_buffer[ofs..i :0]).*;
+                args_ptrs[n] = @as(*align(1) const [*:0]u8, @ptrCast(&input_buffer[ofs..i :0])).*;
                 n += 1;
                 ofs = i + 1;
             }
