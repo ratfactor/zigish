@@ -1,5 +1,10 @@
 = Zigish - Zig Interactive Shell
 
+
+**MOVED!** Hello, I am moving my repos to http://ratfactor.com/repos/
+and setting them to read-only ("archived") on GitHub. Thank you, _-Dave_
+
+
 == I am a real shell!...ish
 
 This is a minimalist toy Unix shell written in Zig.
