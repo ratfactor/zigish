@@ -17,9 +17,13 @@ pub fn build(b: *std.build.Builder) void {
         .target = target,
         .optimize = optimize,
     });
-    exe.install();
 
-    const run_cmd = exe.run();
+    // This declares intent for the executable to be installed into the
+    // standard location when the user invokes the "install" step (the default
+    // step when running `zig build`).
+    b.installArtifact(exe);
+
+    const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
         run_cmd.addArgs(args);
